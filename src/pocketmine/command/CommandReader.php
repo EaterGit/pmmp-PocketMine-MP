@@ -32,6 +32,11 @@ class CommandReader extends Thread{
 	public function __construct(){
 		$this->buffer = new \Threaded;
 		$opts = getopt("", ["disable-readline"]);
+		if(extension_loaded("readline") and !isset($opts["disable-readline"])){
+			echo("readline");
+		}else{
+			echo("stdin");
+		}
 		$this->readline = (extension_loaded("readline") and !isset($opts["disable-readline"]));
 		$this->start();
 	}
@@ -45,7 +50,8 @@ class CommandReader extends Thread{
 			global $stdin;
 
 			if(!is_resource($stdin)){
-				return "";
+				echo("error: stdin corrupted");
+				$stdin = fopen("php://stdin", "r");
 			}
 
 			return trim(fgets($stdin));
