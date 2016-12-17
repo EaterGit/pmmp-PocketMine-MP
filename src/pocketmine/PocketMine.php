@@ -491,6 +491,8 @@ namespace pocketmine {
 		$logger->debug("Stopping " . $thread->getThreadName() . " thread");
 		$thread->quit();
 	}
+	
+	$killer->changeTime(1.5);
 
 	$logger->shutdown();
 	$logger->join();
