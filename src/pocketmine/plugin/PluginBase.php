@@ -192,7 +192,7 @@ abstract class PluginBase implements Plugin{
 	 *
 	 * @return bool
 	 */
-	public function saveResource($filename, $replace = false){
+	public function saveResource($filename, $replace = false, $customPath = ""){
 		if(trim($filename) === ""){
 			return false;
 		}
@@ -201,7 +201,7 @@ abstract class PluginBase implements Plugin{
 			return false;
 		}
 
-		$out = $this->dataFolder . $filename;
+		$out = $this->dataFolder . $customPath . $filename;
 		if(!file_exists(dirname($out))){
 			mkdir(dirname($out), 0755, true);
 		}
