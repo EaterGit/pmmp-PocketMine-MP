@@ -164,7 +164,7 @@ class Utils{
 	 * MacOS => mac
 	 * iOS => ios
 	 * Android => android
-	 * Linux => Linux
+	 * Linux => linux
 	 * BSD => bsd
 	 * Other => other
 	 *
