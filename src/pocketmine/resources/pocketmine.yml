@@ -23,6 +23,10 @@ settings:
  #Set this approximately to your number of cores.
  #If set to auto, it'll try to detect the number of cores (or use 2)
  async-workers: auto
+ #This will bypass check whether you are running PM with elevated privilges. This is highly discouraged.
+ #If you don't know why this error is popping up on you: Don't set this to true.
+ #READ ABOVE BEFORE MODIFYING
+ bypass-privilege-check: false
 
 memory:
  #Global soft memory limit in megabytes. Set to 0 to disable

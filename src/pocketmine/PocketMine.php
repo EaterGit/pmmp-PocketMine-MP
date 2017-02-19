@@ -126,23 +126,6 @@ namespace pocketmine {
 		echo "[CRITICAL] Unable to find the RakLib library." . PHP_EOL;
 		exit(1);
 	}
-	
-	switch(Utils::getOS()){
-		case "linux":
-		case "mac":
-		case "android":
-			if(exec("whoami") === "root"){
-				echo "[CRITICAL] You are running PM with the user root! This is HIGHLY discouraged. I or my plugins may do really bad things. If you know what you are doing you can set bypass-privilege-check to true in pocketmine.yml!" . PHP_EOL;
-				exit(1);
-			}
-		break;
-		case "win":
-		if(exec("net session 2> nul") !== null){
-			echo "[CRITICAL] You are running PM with the admin privileges! This is HIGHLY discouraged. I or my plugins may do really bad things. If you know what you are doing you can set bypass-privilege-check to true in pocketmine.yml!" . PHP_EOL;
-			exit(1);
-		}
-		break;
-	}
 
 	set_time_limit(0); //Who set it to 30 seconds?!?!
 
@@ -355,6 +338,35 @@ namespace pocketmine {
 					exec("kill -9 " . ((int) $pid) . " > /dev/null 2>&1");
 				}
 		}
+	}
+	
+	function isUnix(){
+		switch(Utils::getOS()){
+			case "linux":
+			case "mac":
+			case "android":
+				return true;
+			break;
+		}
+		return false;
+	}
+	
+	function isElevated(){
+		switch(Utils::getOS()){
+			case "linux":
+			case "mac":
+			case "android":
+				if(exec("whoami") === "root"){
+					return true;
+				}
+			break;
+			case "win":
+				if(exec("net session 2> nul") !== null){
+					return true;
+				}
+			break;
+		}
+		return false;
 	}
 
 	/**

@@ -1359,6 +1359,15 @@ class Server{
 				@file_put_contents($this->dataPath . "pocketmine.yml", $content);
 			}
 			$this->config = new Config($this->dataPath . "pocketmine.yml", Config::YAML, []);
+			
+			var_dump($this->config->get("settings.bypass-privilege-check"));
+			if($this->config->get("settings.bypass-privilege-check") != true){
+				if(isElevated()){
+					$sysStr = isUnix() ? "the user root" : "admin privileges";
+					$this->logger->critical("You are running PM with ".$sysStr."! This is HIGHLY discouraged. I or my plugins may do really bad things. If you know what you are doing you can set bypass-privilege-check to true in pocketmine.yml!");
+					@kill(getmypid());
+				}
+			}
 
 			$this->logger->info("Loading server properties...");
 			$this->properties = new Config($this->dataPath . "server.properties", Config::PROPERTIES, [
