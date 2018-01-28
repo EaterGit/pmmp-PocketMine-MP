@@ -157,8 +157,6 @@ namespace pocketmine {
 	 * We now use the Composer autoloader, but this autoloader is still for loading plugins.
 	 */
 	$autoloader = new \BaseClassLoader();
-	$autoloader->addPath(\pocketmine\PATH . "src");
-	$autoloader->addPath(\pocketmine\PATH . "src" . DIRECTORY_SEPARATOR . "spl");
 	$autoloader->register(false);
 
 	set_time_limit(0); //Who set it to 30 seconds?!?!
@@ -170,6 +168,8 @@ namespace pocketmine {
 
 	ini_set("memory_limit", '-1');
 	define('pocketmine\START_TIME', microtime(true));
+
+	define('pocketmine\RESOURCE_PATH', \pocketmine\PATH . 'src' . DIRECTORY_SEPARATOR . 'pocketmine' . DIRECTORY_SEPARATOR . 'resources' . DIRECTORY_SEPARATOR);
 
 	$opts = getopt("", ["data:", "plugins:", "no-wizard", "enable-profiler"]);
 
@@ -530,7 +530,6 @@ namespace pocketmine {
 		define('pocketmine\GIT_COMMIT', $gitHash);
 
 
-		@define("ENDIANNESS", (pack("d", 1) === "\77\360\0\0\0\0\0\0" ? Binary::BIG_ENDIAN : Binary::LITTLE_ENDIAN));
 		@define("INT32_MASK", is_int(0xffffffff) ? 0xffffffff : -1);
 		@ini_set("opcache.mmap_base", bin2hex(random_bytes(8))); //Fix OPCache address errors
 
@@ -549,7 +548,7 @@ namespace pocketmine {
 		}
 
 		ThreadManager::init();
-		new Server($autoloader, $logger, \pocketmine\PATH, \pocketmine\DATA, \pocketmine\PLUGIN_PATH);
+		new Server($autoloader, $logger, \pocketmine\DATA, \pocketmine\PLUGIN_PATH);
 
 		$logger->info("Stopping other threads");
 

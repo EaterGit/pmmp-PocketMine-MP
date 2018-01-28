@@ -21,20 +21,25 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\inventory;
+namespace pocketmine\item;
 
-use pocketmine\level\Position;
+use pocketmine\block\BlockToolType;
 
-class FakeBlockMenu extends Position implements InventoryHolder{
+class Shovel extends TieredTool{
 
-	private $inventory;
-
-	public function __construct(Inventory $inventory, Position $pos){
-		$this->inventory = $inventory;
-		parent::__construct($pos->x, $pos->y, $pos->z, $pos->level);
+	public function isShovel(){
+		return $this->tier;
 	}
 
-	public function getInventory(){
-		return $this->inventory;
+	public function getBlockToolType() : int{
+		return BlockToolType::TYPE_SHOVEL;
+	}
+
+	public function getBlockToolHarvestLevel() : int{
+		return $this->tier;
+	}
+
+	public function getAttackPoints() : int{
+		return self::getBaseDamageFromTier($this->tier) - 3;
 	}
 }
