@@ -121,7 +121,6 @@ use pocketmine\network\mcpe\protocol\MobEquipmentPacket;
 use pocketmine\network\mcpe\protocol\ModalFormRequestPacket;
 use pocketmine\network\mcpe\protocol\MovePlayerPacket;
 use pocketmine\network\mcpe\protocol\PlayerActionPacket;
-use pocketmine\network\mcpe\protocol\PlayerHotbarPacket;
 use pocketmine\network\mcpe\protocol\PlayStatusPacket;
 use pocketmine\network\mcpe\protocol\ProtocolInfo;
 use pocketmine\network\mcpe\protocol\RequestChunkRadiusPacket;
@@ -2497,8 +2496,8 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 								}
 
 								return true;
-							}elseif($this->inventory->getItemInHand()->getId() === Item::BUCKET and $this->inventory->getItemInHand()->getDamage() === 1){ //Milk!
-								$this->server->getPluginManager()->callEvent($ev = new PlayerItemConsumeEvent($this, $this->inventory->getItemInHand()));
+							}elseif($slot->getId() === Item::BUCKET and $slot->getDamage() === 1){ //Milk!
+								$this->server->getPluginManager()->callEvent($ev = new PlayerItemConsumeEvent($this, $slot));
 								if($ev->isCancelled()){
 									$this->inventory->sendContents($this);
 
@@ -2506,7 +2505,6 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 								}
 
 								if($this->isSurvival()){
-									$slot = $this->inventory->getItemInHand();
 									--$slot->count;
 									$this->inventory->setItemInHand($slot);
 									$this->inventory->addItem(ItemFactory::get(Item::BUCKET, 0, 1));
@@ -3540,7 +3538,7 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		$this->sendRespawnPacket($this->getSpawn());
 	}
 
-	protected function callDeathEvent(){
+	protected function onDeath(){
 		$message = "death.attack.generic";
 
 		$params = [
@@ -3685,7 +3683,6 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		}
 
 		if($this->isCreative()
-			and $source->getCause() !== EntityDamageEvent::CAUSE_MAGIC
 			and $source->getCause() !== EntityDamageEvent::CAUSE_SUICIDE
 			and $source->getCause() !== EntityDamageEvent::CAUSE_VOID
 		){

@@ -72,7 +72,7 @@ abstract class Living extends Entity implements Damageable{
 		$health = $this->getMaxHealth();
 
 		if($this->namedtag->hasTag("HealF", FloatTag::class)){
-			$health = new FloatTag("Health", $this->namedtag->getFloat("HealF"));
+			$health = $this->namedtag->getFloat("HealF");
 			$this->namedtag->removeTag("HealF");
 		}elseif($this->namedtag->hasTag("Health")){
 			$healthTag = $this->namedtag->getTag("Health");
@@ -387,7 +387,7 @@ abstract class Living extends Entity implements Damageable{
 			}
 
 			if($e !== null){
-				if($e->isOnFire() > 0){
+				if($e->isOnFire()){
 					$this->setOnFire(2 * $this->level->getDifficulty());
 				}
 
@@ -441,10 +441,10 @@ abstract class Living extends Entity implements Damageable{
 			return;
 		}
 		parent::kill();
-		$this->callDeathEvent();
+		$this->onDeath();
 	}
 
-	protected function callDeathEvent(){
+	protected function onDeath(){
 		$this->server->getPluginManager()->callEvent($ev = new EntityDeathEvent($this, $this->getDrops()));
 		foreach($ev->getDrops() as $item){
 			$this->getLevel()->dropItem($this, $item);
@@ -515,12 +515,6 @@ abstract class Living extends Entity implements Damageable{
 			}else{
 				$effect->setDuration($duration);
 			}
-		}
-	}
-
-	protected function dealFireDamage(){
-		if(!$this->hasEffect(Effect::FIRE_RESISTANCE)){
-			parent::dealFireDamage();
 		}
 	}
 
